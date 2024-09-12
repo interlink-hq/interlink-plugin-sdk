@@ -31,11 +31,9 @@ async def get_logs(req: interlink.LogRequest) -> bytes:
     raise NotImplementedError
 
 
-openapi_schema = os.path.join(
-    os.path.dirname(__file__), *["..", "docs", "openapi", "openapi.json"]
-)
+openapi_schema = os.path.join(os.path.dirname(__file__), *["..", "docs", "openapi", "openapi.json"])
 
-with open(openapi_schema, "w") as f:
+with open(openapi_schema, "w", encoding="utf-8") as fh:
     json.dump(
         get_openapi(
             title="interLink sidecar",
@@ -44,5 +42,5 @@ with open(openapi_schema, "w") as f:
             description="openapi spec for interLink apis <-> provider sidecar communication",
             routes=app.routes,
         ),
-        f,
+        fh,
     )

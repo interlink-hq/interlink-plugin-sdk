@@ -8,13 +8,13 @@ spec:
     kubernetes.io/hostname: my-civo-node
   automountServiceAccountToken: false
   containers:
-  - args:
+  - name: my-container
+    image: "docker://ubuntu" 
+    imagePullPolicy: Always
+    args:
     - "\"600\"" 
     command:
     - sleep 
-    image: "docker://ubuntu" 
-    imagePullPolicy: Always
-    name: my-container
     resources:
       limits:
         cpu: "1"

@@ -3,6 +3,7 @@ from typing import Dict, List, Optional
 
 from pydantic import BaseModel, Field
 
+
 class Metadata(BaseModel):
     name: Optional[str] = None
     namespace: Optional[str] = None
@@ -191,6 +192,7 @@ class LogRequest(BaseModel):
     container_name: str
     opts: LogOpts
 
+
 class CreateStruct(BaseModel):
-	pod_uid: str
-	pod_jid: str
+    pod_uid: str
+    pod_jid: str

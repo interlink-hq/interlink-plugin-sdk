@@ -1,0 +1,23 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "[interlink] build package",
+            "type": "shell",
+            "command": [ "python setup.py sdist bdist_wheel" ],
+        },
+        {
+            "label": "[interlink] black + isort",
+            "type": "shell",
+            "command": [
+                "${config:python.defaultInterpreterPath}", "-m", "black",
+                "--line-length=120",
+                "${workspaceFolder}/interlink",
+                "&&",
+                "${config:python.defaultInterpreterPath}", "-m", "isort",
+                "--line-length=120", "--multi-line=3", "--trailing-comma", "--atomic", "--skip-gitignore",
+                "${workspaceFolder}/interlink"
+            ]
+        }
+    ]
+}
