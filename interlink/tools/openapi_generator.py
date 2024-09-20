@@ -28,7 +28,7 @@ async def get_status(pods: List[i.PodRequest]) -> List[i.PodStatus]:
 
 
 @app.get("/getLogs", summary="Get Pods' logs", response_class=PlainTextResponse)
-async def get_logs(req: i.LogRequest) -> bytes:
+async def get_logs(req: i.LogRequest) -> PlainTextResponse:
     raise NotImplementedError
 
 
