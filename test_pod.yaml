@@ -4,8 +4,8 @@ metadata:
   name: interlink-quickstart
   namespace: default
 spec:
-  nodeSelector:
-    kubernetes.io/hostname: my-civo-node
+  # nodeSelector:
+  #   kubernetes.io/hostname: my-civo-node
   automountServiceAccountToken: false
   containers:
   - name: my-container
@@ -33,4 +33,3 @@ spec:
     key: node.kubernetes.io/unreachable
     operator: Exists
     tolerationSeconds: 300
-

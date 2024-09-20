@@ -7,16 +7,21 @@
             "command": [ "python setup.py sdist bdist_wheel" ],
         },
         {
+            "label": "[interlink] openapi generator",
+            "type": "shell",
+            "command": [ "python -m interlink.tools.openapi_generator" ],
+        },        
+        {
             "label": "[interlink] black + isort",
             "type": "shell",
             "command": [
                 "${config:python.defaultInterpreterPath}", "-m", "black",
-                "--line-length=120",
-                "${workspaceFolder}/interlink",
+                    "--line-length=120",
+                    "${workspaceFolder}/interlink",
                 "&&",
                 "${config:python.defaultInterpreterPath}", "-m", "isort",
-                "--line-length=120", "--multi-line=3", "--trailing-comma", "--atomic", "--skip-gitignore",
-                "${workspaceFolder}/interlink"
+                    "--line-length=120", "--multi-line=3", "--trailing-comma", "--atomic", "--skip-gitignore",
+                    "${workspaceFolder}/interlink"
             ]
         }
     ]
