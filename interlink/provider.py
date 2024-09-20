@@ -1,30 +1,28 @@
 from typing import List
 
-from fastapi import FastAPI, HTTPException
+from fastapi import HTTPException
 
 from .spec import CreateStruct, LogRequest, Pod, PodRequest, PodStatus
 
 
-class Provider(FastAPI):
+class Provider:
     def create(self, pod: Pod) -> CreateStruct:
-        raise HTTPException(status_code=500, detail="NOT IMPLEMENTED YET")
+        raise HTTPException(status_code=500, detail="To be implemented by subclass")
 
     def delete(self, pod: PodRequest) -> None:
-        raise HTTPException(status_code=500, detail="NOT IMPLEMENTED YET")
+        raise HTTPException(status_code=500, detail="To be implemented by subclass")
 
     def status(self, pod: PodRequest) -> PodStatus:
-        raise HTTPException(status_code=500, detail="NOT IMPLEMENTED YET")
+        raise HTTPException(status_code=500, detail="To be implemented by subclass")
 
     def logs(self, req: LogRequest) -> bytes:
-        raise HTTPException(status_code=500, detail="NOT IMPLEMENTED YET")
+        raise HTTPException(status_code=500, detail="To be implemented by subclass")
 
-    def create_pod(self, pod: Pod) -> CreateStruct:
+    def create_pod(self, pod: List[Pod]) -> CreateStruct:
         try:
-            self.create(pod)
+            return self.create(pod[0])
         except Exception as ex:
             raise ex
-
-        return "Containers created"
 
     def delete_pod(self, pod: PodRequest) -> str:
         try:
@@ -32,17 +30,13 @@ class Provider(FastAPI):
         except Exception as ex:
             raise ex
 
-        return "Containers deleted"
+        return f"Pod '{pod.metadata.uid}' deleted"
 
     def get_status(self, pods: List[PodRequest]) -> List[PodStatus]:
-        pod = pods[0]
-
-        return [self.status(pod)]
+        return [self.status(pods[0])]
 
     def get_logs(self, req: LogRequest) -> bytes:
         try:
-            log_content = self.logs(req)
+            return self.logs(req)
         except Exception as ex:
             raise ex
-
-        return log_content
