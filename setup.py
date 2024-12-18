@@ -27,8 +27,8 @@ if __name__ == "__main__":
     setuptools.setup(
         name="interlink",
         version=get_version(),
-        author="Diego Ciangottini",
-        author_email="diego.ciangottini@gmail.com",
+        author="Mauro Gattari",
+        author_email="mauro.gattari@infn.it",
         description="InterLink Plugin SDK",
         long_description=get_readme(),
         long_description_content_type="text/markdown",
