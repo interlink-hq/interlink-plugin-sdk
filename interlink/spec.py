@@ -208,6 +208,7 @@ class LogOpts(BaseModel):
     limit_bytes: Annotated[int | None, Field(alias="LimitBytes")] = None
     timestamps: Annotated[bool | None, Field(alias="Timestamps")] = None
     previous: Annotated[bool | None, Field(alias="Previous")]
+    follow: Annotated[bool | None, Field(alias="Follow")]
     since_seconds: Annotated[int | None, Field(alias="SinceSeconds")] = None
     since_time: Annotated[datetime.datetime | None, Field(alias="SinceTime")] = None
     model_config = ConfigDict(populate_by_name=True)
