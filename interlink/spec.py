@@ -104,18 +104,20 @@ class ConfigMapVolumeSource(BaseModel):
     model_config = ConfigDict(populate_by_name=True)
 
 
-# class VolumeSource(BaseModel):
-#     emptyDir: Optional[dict] = None
-#     secret: Optional[SecretSource] = None
-#     configMap: Optional[ConfigMapVolumeSource] = None
+class PersistentVolumeClaimVolumeSource(BaseModel):
+    claim_name: Annotated[str, Field(alias="claimName")]
+    read_only: Annotated[bool | None, Field(alias="readOnly")] = None
+    model_config = ConfigDict(populate_by_name=True)
 
 
 class PodVolume(BaseModel):
     name: str
-    #    volumeSource: Optional[VolumeSource] = None
     empty_dir: Annotated[dict | None, Field(alias="emptyDir")] = None
     secret: Optional[SecretVolumeSource] = None
     config_map: Annotated[ConfigMapVolumeSource | None, Field(alias="configMap")] = None
+    persistent_volume_claim: Annotated[
+        PersistentVolumeClaimVolumeSource | None, Field(alias="persistentVolumeClaim")
+    ] = None
     model_config = ConfigDict(populate_by_name=True)
 
 
