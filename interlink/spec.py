@@ -1,5 +1,5 @@
 import datetime
-from typing import Annotated, Dict, List, Optional
+from typing import Annotated, Dict, List, Literal, Optional
 
 from pydantic import BaseModel, ConfigDict, Field
 
@@ -156,11 +156,32 @@ class Secret(BaseModel):
     model_config = ConfigDict(populate_by_name=True)
 
 
+class VolumeResourceRequirements(BaseModel):
+    requests: dict  # e.g.: {"storage": "1Gi"}
+    limits: Optional[dict] = {}
+
+
+class PersistentVolumeClaimSpec(BaseModel):
+    access_modes: Annotated[List[Literal["ReadWriteOnce", "ReadOnlyMany", "ReadWriteMany"]], Field(alias="accessModes")]
+    resources: VolumeResourceRequirements
+    storage_class_name: Annotated[Optional[str], Field(alias="storageClassName")] = None
+    volume_attributes_class_name: Annotated[Optional[str], Field(alias="volumeAttributesClassName")] = None
+    volume_mode: Annotated[Optional[str], Field(alias="volumeMode")] = None
+    volume_name: Annotated[Optional[str], Field(alias="volumeName")] = None
+
+
+class PersistentVolumeClaim(BaseModel):
+    spec: PersistentVolumeClaimSpec
+
+
 class Volume(BaseModel):
     name: str
     config_maps: Annotated[List[ConfigMap] | None, Field(alias="configMaps")] = None
     secrets: Optional[List[Secret]] = None
     empty_dirs: Annotated[List[str] | None, Field(alias="emptyDirs")] = None
+    persistent_volume_claims: Annotated[List[PersistentVolumeClaim] | None, Field(alias="persistentVolumeClaims")] = (
+        None
+    )
     model_config = ConfigDict(populate_by_name=True)
 
 
