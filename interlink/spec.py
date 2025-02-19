@@ -72,7 +72,7 @@ class Container(BaseModel):
     name: str
     image: str
     tag: str = "latest"
-    command: List[str]
+    command: Optional[List[str]] = None
     args: Optional[List[str]] = Field([])
     resources: Optional[dict] = Field({})
     volume_mounts: Annotated[List[VolumeMount] | None, Field(alias="volumeMounts")] = []
