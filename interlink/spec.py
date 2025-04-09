@@ -202,6 +202,7 @@ class PersistentVolumeClaimSpec(BaseModel):
 
 
 class PersistentVolumeClaim(BaseModel):
+    metadata: Metadata
     spec: PersistentVolumeClaimSpec
 
 
