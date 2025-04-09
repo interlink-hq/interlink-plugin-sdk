@@ -157,17 +157,48 @@ class Secret(BaseModel):
 
 
 class VolumeResourceRequirements(BaseModel):
-    requests: dict  # e.g.: {"storage": "1Gi"}
-    limits: Optional[dict] = None
+    requests: dict[str, str]  # e.g.: {"storage": "1Gi"}
+    limits: Optional[dict[str, str]] = None
+
+
+class LabelSelectorRequirement(BaseModel):
+    key: str
+    operator: str
+    values: Optional[List[str]] = None
+
+
+class LabelSelector(BaseModel):
+    match_labels: Annotated[Optional[dict[str, str]], Field(alias="matchLabels")] = None
+    match_expressions: Annotated[Optional[List[LabelSelectorRequirement]], Field(alias="matchExpressions")] = None
+    model_config = ConfigDict(populate_by_name=True)
+
+
+class TypedLocalObjectReference(BaseModel):
+    api_group: Annotated[Optional[str], Field(alias="apiGroup")] = None
+    kind: str
+    name: str
+    model_config = ConfigDict(populate_by_name=True)
+
+
+class TypedObjectReference(BaseModel):
+    api_group: Annotated[Optional[str], Field(alias="apiGroup")] = None
+    kind: str
+    name: str
+    namespace: Optional[str] = None
+    model_config = ConfigDict(populate_by_name=True)
 
 
 class PersistentVolumeClaimSpec(BaseModel):
     access_modes: Annotated[List[Literal["ReadWriteOnce", "ReadOnlyMany", "ReadWriteMany"]], Field(alias="accessModes")]
+    data_source: Annotated[TypedLocalObjectReference | None, Field(alias="dataSource")] = None
+    data_source_ref: Annotated[TypedObjectReference | None, Field(alias="dataSourceRef")] = None
     resources: VolumeResourceRequirements
+    selector: Optional[LabelSelector] = None
     storage_class_name: Annotated[Optional[str], Field(alias="storageClassName")] = None
     volume_attributes_class_name: Annotated[Optional[str], Field(alias="volumeAttributesClassName")] = None
     volume_mode: Annotated[Optional[str], Field(alias="volumeMode")] = None
     volume_name: Annotated[Optional[str], Field(alias="volumeName")] = None
+    model_config = ConfigDict(populate_by_name=True)
 
 
 class PersistentVolumeClaim(BaseModel):
