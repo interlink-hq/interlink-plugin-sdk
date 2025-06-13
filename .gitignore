@@ -129,3 +129,6 @@ dmypy.json
 .pyre/
 
 build/
+
+# Claude Code configuration
+CLAUDE.md

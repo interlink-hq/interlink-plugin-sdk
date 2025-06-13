@@ -1,6 +1,9 @@
 import datetime
 from typing import Annotated, Dict, List, Literal, Optional
 
+# Note: Some models below are extensions to the core v0.5.0 OpenAPI spec
+# for backward compatibility and extended functionality
+
 from pydantic import BaseModel, ConfigDict, Field
 
 
@@ -72,13 +75,13 @@ class Container(BaseModel):
     name: str
     image: str
     tag: str = "latest"
-    command: Optional[List[str]] = None
+    command: List[str]  # Required in v0.5.0
     args: Optional[List[str]] = Field([])
     resources: Optional[dict] = Field({})
-    volume_mounts: Annotated[List[VolumeMount] | None, Field(alias="volumeMounts")] = []
+    volume_mounts: Optional[List[VolumeMount]] = Field([])  # Updated for v0.5.0
     env: Optional[List[EnvVar]] = None
-    security_context: Annotated[SecurityContext | None, Field(alias="securityContext")] = None
-    ports: Optional[List[ContainerPort]] = None
+    security_context: Optional[SecurityContext] = None  # Updated for v0.5.0
+    ports: Optional[List[ContainerPort]] = None  # Extension: not in v0.5.0 core spec
     model_config = ConfigDict(populate_by_name=True)
 
 
@@ -251,34 +254,33 @@ class ContainerStatus(BaseModel):
 
 class PodStatus(BaseModel):
     name: str
-    uid: Annotated[str, Field(alias="UID")]
-    jid: Annotated[str | None, Field(alias="JID")] = None
+    uid: str  # Updated for v0.5.0 (was "UID")
+    jid: Optional[str] = None  # Updated for v0.5.0 (was "JID") - Extension: not in v0.5.0 core spec
     namespace: str
     containers: List[ContainerStatus]
     model_config = ConfigDict(populate_by_name=True)
 
 
 class LogOpts(BaseModel):
-    tail: Annotated[int | None, Field(alias="Tail")] = None
-    limit_bytes: Annotated[int | None, Field(alias="LimitBytes")] = None
-    timestamps: Annotated[bool | None, Field(alias="Timestamps")] = None
-    previous: Annotated[bool | None, Field(alias="Previous")]
-    follow: Annotated[bool | None, Field(alias="Follow")]
-    since_seconds: Annotated[int | None, Field(alias="SinceSeconds")] = None
-    since_time: Annotated[datetime.datetime | None, Field(alias="SinceTime")] = None
+    tail: Optional[int] = None  # Updated for v0.5.0
+    limit_bytes: Optional[int] = None  # Updated for v0.5.0 
+    timestamps: Optional[bool] = None  # Updated for v0.5.0
+    previous: Optional[bool] = None  # Updated for v0.5.0
+    since_seconds: Optional[int] = None  # Updated for v0.5.0
+    since_time: Optional[datetime.datetime] = None  # Updated for v0.5.0
     model_config = ConfigDict(populate_by_name=True)
 
 
 class LogRequest(BaseModel):
-    namespace: Annotated[str, Field(alias="Namespace")]
-    pod_uid: Annotated[str, Field(alias="PodUID")]
-    pod_name: Annotated[str, Field(alias="PodName")]
-    container_name: Annotated[str, Field(alias="ContainerName")]
-    opts: Annotated[LogOpts, Field(alias="Opts")]
+    namespace: str  # Updated for v0.5.0
+    pod_uid: str  # Updated for v0.5.0 
+    pod_name: str  # Updated for v0.5.0
+    container_name: str  # Updated for v0.5.0
+    opts: LogOpts  # Updated for v0.5.0
     model_config = ConfigDict(populate_by_name=True)
 
 
 class CreateStruct(BaseModel):
-    pod_uid: Annotated[str, Field(alias="PodUID")]
-    pod_jid: Annotated[str, Field(alias="PodJID")]
+    pod_uid: str  # Updated for v0.5.0
+    pod_jid: str  # Updated for v0.5.0
     model_config = ConfigDict(populate_by_name=True)
