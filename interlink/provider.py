@@ -18,9 +18,9 @@ class Provider:
     def logs(self, req: LogRequest) -> bytes:
         raise HTTPException(status_code=500, detail="To be implemented by subclass")
 
-    def create_pod(self, pod: List[Pod]) -> CreateStruct:
+    def create_pod(self, pod: Pod) -> CreateStruct:
         try:
-            return self.create(pod[0])
+            return self.create(pod)
         except Exception as ex:
             raise ex
 
