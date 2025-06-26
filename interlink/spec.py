@@ -3,6 +3,10 @@ from typing import Annotated, Dict, List, Literal, Optional
 
 from pydantic import BaseModel, ConfigDict, Field
 
+# Note: Some models below are extensions to the core v0.5.0 OpenAPI spec
+# for backward compatibility and extended functionality
+
+
 
 class Metadata(BaseModel):
     name: Optional[str] = None
@@ -36,8 +40,12 @@ class SecretKeySelector(BaseModel):
 
 
 class EnvVarSource(BaseModel):
-    config_map_key_ref: Annotated[ConfigMapKeySelector | None, Field(alias="configMapKeyRef")] = None
-    secret_key_ref: Annotated[SecretKeySelector | None, Field(alias="secretKeyRef")] = None
+    config_map_key_ref: Annotated[
+        ConfigMapKeySelector | None, Field(alias="configMapKeyRef")
+    ] = None
+    secret_key_ref: Annotated[SecretKeySelector | None, Field(alias="secretKeyRef")] = (
+        None
+    )
     model_config = ConfigDict(populate_by_name=True)
 
 
@@ -49,10 +57,14 @@ class EnvVar(BaseModel):
 
 
 class SecurityContext(BaseModel):
-    allow_privilege_escalation: Annotated[bool | None, Field(alias="allowPrivilegeEscalation")] = None
+    allow_privilege_escalation: Annotated[
+        bool | None, Field(alias="allowPrivilegeEscalation")
+    ] = None
     privileged: Optional[bool] = None
     proc_mount: Annotated[str | None, Field(alias="procMount")] = None
-    read_only_file_system: Annotated[bool | None, Field(alias="readOnlyFileSystem")] = None
+    read_only_file_system: Annotated[bool | None, Field(alias="readOnlyFileSystem")] = (
+        None
+    )
     run_as_group: Annotated[int | None, Field(alias="runAsGroup")] = None
     run_as_non_root: Annotated[bool | None, Field(alias="runAsNonRoot")] = None
     run_as_user: Annotated[int | None, Field(alias="runAsUser")] = None
@@ -77,8 +89,10 @@ class Container(BaseModel):
     resources: Optional[dict] = Field({})
     volume_mounts: Annotated[List[VolumeMount] | None, Field(alias="volumeMounts")] = []
     env: Optional[List[EnvVar]] = None
-    security_context: Annotated[SecurityContext | None, Field(alias="securityContext")] = None
-    ports: Optional[List[ContainerPort]] = None
+    security_context: Annotated[
+        SecurityContext | None, Field(alias="securityContext")
+    ] = None
+    ports: Optional[List[ContainerPort]] = None  # Extension: not in v0.5.0 core spec
     model_config = ConfigDict(populate_by_name=True)
 
 
@@ -123,13 +137,17 @@ class PodVolume(BaseModel):
 
 class PodSpec(BaseModel):
     containers: List[Container]
-    init_containers: Annotated[List[Container] | None, Field(alias="initContainers")] = None
+    init_containers: Annotated[
+        List[Container] | None, Field(alias="initContainers")
+    ] = None
     volumes: Optional[List[PodVolume]] = None
     preemption_policy: Annotated[str | None, Field(alias="preemptionPolicy")] = None
     priority_class_name: Annotated[str | None, Field(alias="priorityClassName")] = None
     priority: Optional[int] = None
     restart_policy: Annotated[str | None, Field(alias="restartPolicy")] = None
-    termination_grace_period_seconds: Annotated[int | None, Field(alias="terminationGracePeriodSeconds")] = None
+    termination_grace_period_seconds: Annotated[
+        int | None, Field(alias="terminationGracePeriodSeconds")
+    ] = None
     model_config = ConfigDict(populate_by_name=True)
 
 
@@ -169,7 +187,9 @@ class LabelSelectorRequirement(BaseModel):
 
 class LabelSelector(BaseModel):
     match_labels: Annotated[Optional[dict[str, str]], Field(alias="matchLabels")] = None
-    match_expressions: Annotated[Optional[List[LabelSelectorRequirement]], Field(alias="matchExpressions")] = None
+    match_expressions: Annotated[
+        Optional[List[LabelSelectorRequirement]], Field(alias="matchExpressions")
+    ] = None
     model_config = ConfigDict(populate_by_name=True)
 
 
@@ -189,13 +209,22 @@ class TypedObjectReference(BaseModel):
 
 
 class PersistentVolumeClaimSpec(BaseModel):
-    access_modes: Annotated[List[Literal["ReadWriteOnce", "ReadOnlyMany", "ReadWriteMany"]], Field(alias="accessModes")]
-    data_source: Annotated[TypedLocalObjectReference | None, Field(alias="dataSource")] = None
-    data_source_ref: Annotated[TypedObjectReference | None, Field(alias="dataSourceRef")] = None
+    access_modes: Annotated[
+        List[Literal["ReadWriteOnce", "ReadOnlyMany", "ReadWriteMany"]],
+        Field(alias="accessModes"),
+    ]
+    data_source: Annotated[
+        TypedLocalObjectReference | None, Field(alias="dataSource")
+    ] = None
+    data_source_ref: Annotated[
+        TypedObjectReference | None, Field(alias="dataSourceRef")
+    ] = None
     resources: VolumeResourceRequirements
     selector: Optional[LabelSelector] = None
     storage_class_name: Annotated[Optional[str], Field(alias="storageClassName")] = None
-    volume_attributes_class_name: Annotated[Optional[str], Field(alias="volumeAttributesClassName")] = None
+    volume_attributes_class_name: Annotated[
+        Optional[str], Field(alias="volumeAttributesClassName")
+    ] = None
     volume_mode: Annotated[Optional[str], Field(alias="volumeMode")] = None
     volume_name: Annotated[Optional[str], Field(alias="volumeName")] = None
     model_config = ConfigDict(populate_by_name=True)
@@ -211,9 +240,9 @@ class Volume(BaseModel):
     config_maps: Annotated[List[ConfigMap] | None, Field(alias="configMaps")] = None
     secrets: Optional[List[Secret]] = None
     empty_dirs: Annotated[List[str] | None, Field(alias="emptyDirs")] = None
-    persistent_volume_claims: Annotated[List[PersistentVolumeClaim] | None, Field(alias="persistentVolumeClaims")] = (
-        None
-    )
+    persistent_volume_claims: Annotated[
+        List[PersistentVolumeClaim] | None, Field(alias="persistentVolumeClaims")
+    ] = None
     model_config = ConfigDict(populate_by_name=True)
 
 
@@ -263,7 +292,6 @@ class LogOpts(BaseModel):
     limit_bytes: Annotated[int | None, Field(alias="LimitBytes")] = None
     timestamps: Annotated[bool | None, Field(alias="Timestamps")] = None
     previous: Annotated[bool | None, Field(alias="Previous")]
-    follow: Annotated[bool | None, Field(alias="Follow")]
     since_seconds: Annotated[int | None, Field(alias="SinceSeconds")] = None
     since_time: Annotated[datetime.datetime | None, Field(alias="SinceTime")] = None
     model_config = ConfigDict(populate_by_name=True)
