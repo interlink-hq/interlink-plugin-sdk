@@ -7,7 +7,6 @@ from pydantic import BaseModel, ConfigDict, Field
 # for backward compatibility and extended functionality
 
 
-
 class Metadata(BaseModel):
     name: Optional[str] = None
     namespace: Optional[str] = None
@@ -137,9 +136,9 @@ class PodVolume(BaseModel):
 
 class PodSpec(BaseModel):
     containers: List[Container]
-    init_containers: Annotated[
-        List[Container] | None, Field(alias="initContainers")
-    ] = None
+    init_containers: Annotated[List[Container] | None, Field(alias="initContainers")] = (
+        None
+    )
     volumes: Optional[List[PodVolume]] = None
     preemption_policy: Annotated[str | None, Field(alias="preemptionPolicy")] = None
     priority_class_name: Annotated[str | None, Field(alias="priorityClassName")] = None
